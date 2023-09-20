@@ -49,7 +49,6 @@ fn main() {
     let total = env::args()
         .nth(2)
         .expect("Missing total liters of eggnogs argument!");
-    let _part_2_enable = env::args().nth(3).or(None).is_some();
     let inputs = fs::read_to_string(input_file_path).expect("Invalid file path argument!");
 
     let containers: Vec<usize> = inputs.lines().map(|f| f.parse().unwrap()).collect();
