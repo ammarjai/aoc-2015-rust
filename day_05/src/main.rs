@@ -1,3 +1,5 @@
+#![warn(clippy::pedantic)]
+
 use std::collections::HashSet;
 use std::env;
 use std::fs;
@@ -59,7 +61,7 @@ fn is_nice_v2(input: &str) -> bool {
         }
 
         if let Some(a) = prev_char {
-            let pair = format!("{}{}", a, c);
+            let pair = format!("{a}{c}");
             let insert = pair_sets.insert(pair.clone());
             if insert && input.matches(&pair).collect::<Vec<&str>>().len() > 1 {
                 pair_repeat = true;

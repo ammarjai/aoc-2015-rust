@@ -1,3 +1,5 @@
+#![warn(clippy::pedantic)]
+
 use std::collections::HashMap;
 use std::env;
 use std::fs;
@@ -11,11 +13,11 @@ fn permute_heap(k: usize, data: &mut Vec<String>, output: &mut Vec<Vec<String>>)
 
         for index in 0..k - 1 {
             if k % 2 == 0 {
-                data.swap(index, k - 1)
+                data.swap(index, k - 1);
             } else {
                 data.swap(0, k - 1);
             }
-            permute_heap(k - 1, data, output)
+            permute_heap(k - 1, data, output);
         }
     }
 }
@@ -32,29 +34,37 @@ struct UndirectedGraph {
 }
 
 impl UndirectedGraph {
-    fn add_lines(&mut self, node1: String, node2: String, weight: i32) {
-        if !self.nodes.iter().any(|x| x == &node1) {
-            self.nodes.push(node1.clone());
+    fn add_lines(&mut self, node1: &str, node2: &str, weight: i32) {
+        if !self.nodes.iter().any(|x| x == node1) {
+            self.nodes.push(node1.to_string());
         }
 
-        if !self.nodes.iter().any(|x| x == &node2) {
-            self.nodes.push(node2.clone());
+        if !self.nodes.iter().any(|x| x == node2) {
+            self.nodes.push(node2.to_string());
         }
 
         if !self
             .lines
             .iter()
-            .any(|((k1, k2), _)| (k1, k2) == (&node1, &node2))
+            .any(|((k1, k2), _)| (k1, k2) == (&node1.to_string(), &node2.to_string()))
             && !self
                 .lines
                 .iter()
-                .any(|((k1, k2), _)| (k1, k2) == (&node2, &node1))
+                .any(|((k1, k2), _)| (k1, k2) == (&node2.to_string(), &node1.to_string()))
         {
-            self.lines.insert((node1.clone(), node2.clone()), weight);
-            self.lines.insert((node2.clone(), node1.clone()), weight);
+            self.lines
+                .insert((node1.to_string(), node2.to_string()), weight);
+            self.lines
+                .insert((node2.to_string(), node1.to_string()), weight);
         } else {
-            *self.lines.get_mut(&(node1.clone(), node2.clone())).unwrap() += weight;
-            *self.lines.get_mut(&(node2.clone(), node1.clone())).unwrap() += weight;
+            *self
+                .lines
+                .get_mut(&(node1.to_string(), node2.to_string()))
+                .unwrap() += weight;
+            *self
+                .lines
+                .get_mut(&(node2.to_string(), node1.to_string()))
+                .unwrap() += weight;
         }
     }
 
@@ -66,7 +76,7 @@ impl UndirectedGraph {
             nodes: vec![],
             weights: 0,
         };
-        for path in permutations.iter() {
+        for path in &permutations {
             let mut total_weights: i32 = 0;
             for index in 0..path.len() - 1 {
                 let weight = self
@@ -88,7 +98,7 @@ impl UndirectedGraph {
             }
         }
 
-        println!("Optimal: {:#?}", longest_path);
+        println!("Optimal: {longest_path:#?}");
     }
 }
 
@@ -112,12 +122,12 @@ fn main() {
             weight *= -1;
         }
 
-        graph.add_lines(String::from(node1), String::from(node2), weight);
+        graph.add_lines(node1, node2, weight);
     }
 
     if part_2_enable {
-        for value in graph.nodes.clone().iter() {
-            graph.add_lines(String::from("Me"), value.clone(), 0);
+        for value in &graph.nodes.clone() {
+            graph.add_lines("Me", value, 0);
         }
     }
 

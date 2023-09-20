@@ -1,3 +1,5 @@
+#![warn(clippy::pedantic)]
+
 use queues::IsQueue;
 use queues::Queue;
 use std::collections::HashMap;
@@ -20,11 +22,11 @@ fn extract_op_and_output<'a>(commands: &'a Vec<&str>) -> Result<(Op, String), &'
         4 => Ok((Op::Not, String::from(commands[3]))),
         5 => {
             let output = String::from(commands[4]);
-            match commands[1] {
-                "And" => Ok((Op::And, output)),
-                "Or" => Ok((Op::Or, output)),
-                "Lshift" => Ok((Op::Lshift, output)),
-                "Rshift" => Ok((Op::Rshift, output)),
+            match *commands.get(1).unwrap() {
+                "AND" => Ok((Op::And, output)),
+                "OR" => Ok((Op::Or, output)),
+                "LSHIFT" => Ok((Op::Lshift, output)),
+                "RSHIFT" => Ok((Op::Rshift, output)),
                 _ => Err("Unsupported operation!"),
             }
         }

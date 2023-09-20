@@ -1,7 +1,9 @@
+#![warn(clippy::pedantic)]
+
 use std::env;
 use std::fs;
 
-fn part1(inputs: String) {
+fn part1(inputs: &str) {
     let mut cumulative_literals_length = 0usize;
     let mut cumulative_characters_length = 0usize;
     for input in inputs.lines() {
@@ -17,7 +19,7 @@ fn part1(inputs: String) {
                 if next == 'x' {
                     let c1 = iter.next().unwrap();
                     let c2 = iter.next().unwrap();
-                    let co = u8::from_str_radix(&format!("{}{}", c1, c2), 16).unwrap();
+                    let co = u8::from_str_radix(&format!("{c1}{c2}"), 16).unwrap();
                     if co > 32 && co < 127 {
                         parse_string.push(co as char);
                         continue;
@@ -27,7 +29,7 @@ fn part1(inputs: String) {
                 parse_string.push(next);
                 continue;
             }
-            parse_string.push(c)
+            parse_string.push(c);
         }
 
         cumulative_characters_length += parse_string.len();
@@ -49,7 +51,7 @@ fn part1(inputs: String) {
     );
 }
 
-fn part2(inputs: String) {
+fn part2(inputs: &str) {
     let mut cumulative_literals_length = 0usize;
     let mut cumulative_new_literals_length = 0usize;
     for input in inputs.lines() {
@@ -63,7 +65,7 @@ fn part2(inputs: String) {
                 '\\' | '"' => parse_string.push('\\'),
                 _ => (),
             }
-            parse_string.push(c)
+            parse_string.push(c);
         }
 
         parse_string.push('"');
@@ -92,8 +94,8 @@ fn main() {
     let inputs = fs::read_to_string(input_file_path).expect("Invalid file path argument!");
 
     if part_2_enable {
-        part2(inputs);
+        part2(&inputs);
     } else {
-        part1(inputs);
+        part1(&inputs);
     }
 }

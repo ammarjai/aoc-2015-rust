@@ -1,3 +1,5 @@
+#![warn(clippy::pedantic)]
+
 use std::env;
 use std::fs;
 
@@ -25,7 +27,8 @@ fn rule3(input: &str) -> bool {
     for (c1, c2) in input[..input.len() - 1].chars().zip(input[1..].chars()) {
         if chars.contains(&c1) {
             continue;
-        } else if c1 == c2 {
+        }
+        if c1 == c2 {
             count += 1;
             chars.push(c2);
         }
@@ -39,17 +42,14 @@ fn rule3(input: &str) -> bool {
 fn increment(input: &str, index: Option<usize>) -> String {
     let mut chars = input.chars().collect::<Vec<char>>();
     if let Some(i) = index {
-        match chars[i] {
-            'z' => {
-                chars[i] = 'a';
-                let input = String::from_iter(chars);
-                increment(&input, Some(i - 1))
-            }
-            _ => {
-                let new_char = (chars[i] as u8 + 1) as char;
-                chars[i] = new_char;
-                String::from_iter(chars)
-            }
+        if chars[i] == 'z' {
+            chars[i] = 'a';
+            let input = String::from_iter(chars);
+            increment(&input, Some(i - 1))
+        } else {
+            let new_char = (chars[i] as u8 + 1) as char;
+            chars[i] = new_char;
+            String::from_iter(chars)
         }
     } else {
         increment(input, Some(input.len() - 1))
@@ -68,6 +68,6 @@ fn main() {
                 break;
             }
         }
-        println!("Output {}: {}", i, next_pass);
+        println!("Output {i}: {next_pass}");
     }
 }

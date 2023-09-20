@@ -1,3 +1,5 @@
+#![warn(clippy::pedantic)]
+
 use std::env;
 use std::fs;
 
@@ -23,7 +25,7 @@ fn main() {
 
         let volume = length * width * height;
         let mut area_sorted = [length, width, height];
-        area_sorted.sort();
+        area_sorted.sort_unstable();
         let feet_of_ribbon = volume + (area_sorted[0] * 2) + (area_sorted[1] * 2);
         total_feet_of_ribbon += feet_of_ribbon;
     }

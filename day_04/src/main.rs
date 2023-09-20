@@ -1,3 +1,5 @@
+#![warn(clippy::pedantic)]
+
 use std::env;
 use std::fs;
 
@@ -10,7 +12,7 @@ fn main() {
         let mut digest_input = input.clone();
         digest_input.push_str(&i.to_string());
         let digest = md5::compute(&digest_input);
-        let digest_string = format!("{:x}", digest);
+        let digest_string = format!("{digest:x}");
 
         if (part_2_enable && !digest_string.starts_with("000000"))
             || !digest_string.starts_with("00000")

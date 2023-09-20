@@ -1,3 +1,5 @@
+#![warn(clippy::pedantic)]
+
 use std::collections::HashMap;
 use std::env;
 use std::fs;
@@ -49,7 +51,7 @@ fn main() {
         }
 
         if part_2_enable && (index % 2) == 0 {
-            let key = format!("{},{}", second_pos_x, second_pos_y);
+            let key = format!("{second_pos_x},{second_pos_y}");
             match house_visits.get(&key) {
                 Some(visits) => {
                     house_visits.insert(key, *visits + 1);
@@ -61,7 +63,7 @@ fn main() {
             continue;
         }
 
-        let key = format!("{},{}", first_pos_x, first_pos_y);
+        let key = format!("{first_pos_x},{first_pos_y}");
         match house_visits.get(&key) {
             Some(visits) => {
                 house_visits.insert(key, *visits + 1);

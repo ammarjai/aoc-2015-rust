@@ -1,3 +1,5 @@
+#![warn(clippy::pedantic)]
+
 use json::JsonValue;
 use std::env;
 use std::fs;

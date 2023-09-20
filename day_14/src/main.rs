@@ -1,3 +1,5 @@
+#![warn(clippy::pedantic)]
+
 use std::env;
 use std::fs;
 
@@ -37,11 +39,11 @@ fn main() {
             counter: commands[6].parse::<usize>().unwrap(),
             distance: 0,
             points: 0,
-        })
+        });
     }
 
     for _ in 0..total_time {
-        for reindeer in reindeers.iter_mut() {
+        for reindeer in &mut reindeers {
             match reindeer.state {
                 ReindeerState::Flying => {
                     reindeer.counter -= 1;

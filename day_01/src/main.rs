@@ -1,3 +1,5 @@
+#![warn(clippy::pedantic)]
+
 use std::fs;
 
 fn main() {
@@ -11,7 +13,7 @@ fn main() {
     println!(
         "{: >40} => {}",
         "Final floor",
-        up_count.len() as i32 - down_count.len() as i32,
+        i32::try_from(up_count.len()).unwrap() - i32::try_from(down_count.len()).unwrap(),
     );
 
     let mut count = 0;

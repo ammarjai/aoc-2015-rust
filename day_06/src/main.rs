@@ -1,3 +1,5 @@
+#![warn(clippy::pedantic)]
+
 use std::env;
 use std::fs;
 
@@ -15,7 +17,7 @@ struct GridOp {
     end_coordinate: [usize; 2],
 }
 
-fn update_grid_op(grid_op: &mut GridOp, op: Op, commands: Vec<&str>) {
+fn update_grid_op(grid_op: &mut GridOp, op: Op, commands: &[&str]) {
     grid_op.operation = op;
     let mut index = 1;
     if grid_op.operation != Op::Toggle {
@@ -40,7 +42,7 @@ fn main() {
     let part_2_enable = env::args().nth(2).or(None).is_some();
     let inputs = fs::read_to_string(input_file_path).expect("Invalid file path argument!");
 
-    let mut light_grid: [[u8; 1000]; 1000] = [[0; 1000]; 1000];
+    let mut light_grid = vec![[0; 1000]; 1000].into_boxed_slice();
     for input in inputs.lines() {
         let commands = input.split(' ').collect::<Vec<&str>>();
         let mut grid_op = GridOp {
@@ -49,34 +51,32 @@ fn main() {
             end_coordinate: [0; 2],
         };
 
-        match commands[0] {
-            "toggle" => update_grid_op(&mut grid_op, Op::Toggle, commands),
-            "turn" => match commands[1] {
-                "on" => update_grid_op(&mut grid_op, Op::On, commands),
-                "off" => update_grid_op(&mut grid_op, Op::Off, commands),
+        match *commands.first().unwrap() {
+            "toggle" => update_grid_op(&mut grid_op, Op::Toggle, &commands),
+            "turn" => match *commands.get(1).unwrap() {
+                "on" => update_grid_op(&mut grid_op, Op::On, &commands),
+                "off" => update_grid_op(&mut grid_op, Op::Off, &commands),
                 _ => (),
             },
             _ => (),
         }
 
-        for grid_row in &mut light_grid[grid_op.start_coordinate[1]..grid_op.end_coordinate[1] + 1]
-        {
-            for grid_value in
-                &mut grid_row[grid_op.start_coordinate[0]..grid_op.end_coordinate[0] + 1]
+        for grid_row in &mut light_grid[grid_op.start_coordinate[1]..=grid_op.end_coordinate[1]] {
+            for grid_value in &mut grid_row[grid_op.start_coordinate[0]..=grid_op.end_coordinate[0]]
             {
                 match grid_op.operation {
                     Op::Toggle => {
                         if part_2_enable {
-                            *grid_value += 2
+                            *grid_value += 2;
                         } else {
-                            *grid_value ^= 0b00000001
+                            *grid_value ^= 0b0000_0001;
                         }
                     }
                     Op::On => {
                         if part_2_enable {
-                            *grid_value += 1
+                            *grid_value += 1;
                         } else {
-                            *grid_value = 1
+                            *grid_value = 1;
                         }
                     }
                     Op::Off => {
@@ -85,7 +85,7 @@ fn main() {
                                 *grid_value -= 1;
                             }
                         } else {
-                            *grid_value = 0
+                            *grid_value = 0;
                         }
                     }
                 }
@@ -96,7 +96,7 @@ fn main() {
     let output: usize = if part_2_enable {
         light_grid
             .iter()
-            .map(|&column| column.iter().map(|&v| usize::from(v)).sum::<usize>())
+            .map(|&column| column.iter().sum::<usize>())
             .sum()
     } else {
         light_grid
@@ -104,5 +104,5 @@ fn main() {
             .map(|&column| column.iter().filter(|&v| *v == 1).count())
             .sum()
     };
-    println!("{:#?}", output);
+    println!("{output:#?}");
 }

@@ -1,7 +1,9 @@
+#![warn(clippy::pedantic)]
+
 use std::env;
 use std::fs;
 
-fn look_and_say(input: String) -> String {
+fn look_and_say(input: &str) -> String {
     let mut output = String::new();
     let mut current_char: Option<char> = None;
     let mut count: usize = 0;
@@ -18,7 +20,7 @@ fn look_and_say(input: String) -> String {
             continue;
         }
 
-        output.push_str(&format!("{}{}", count, c2));
+        output.push_str(&format!("{count}{c2}"));
         current_char = Some(c);
         count = 1;
     }
@@ -38,7 +40,7 @@ fn main() {
     }
 
     for _ in 0..max {
-        output = look_and_say(output);
+        output = look_and_say(&output);
     }
     println!("Output Length: {}", output.len());
 }
