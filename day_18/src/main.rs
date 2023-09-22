@@ -57,7 +57,7 @@ fn main() {
 
     let total_lights_on = light_grid
         .iter()
-        .map(|f| bytecount::count(f, 1u8))
+        .map(|f| f.iter().map(|&f| usize::from(f)).sum::<usize>())
         .sum::<usize>();
     println!("Total lights turned on: {total_lights_on}");
 }
